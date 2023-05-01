@@ -1,6 +1,5 @@
-using Microsoft.Extensions.Logging;
-using PocCache.Cache;
 using PocCache.Domain;
+using PocCache.InfraWeather.CacheComponents;
 
 namespace PocCache.InfraWeather;
 
@@ -13,18 +12,17 @@ internal class WeatherForecastRepository : IWeatherForecasts
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private readonly IObjectCache _objectCache;
+    private readonly IWeatherForecastCache _cache;
 
     public WeatherForecastRepository(
-        IObjectCache objectCache,
-        ILogger<WeatherForecastRepository> logger)
+        IWeatherForecastCache cache)
     {
-        _objectCache = objectCache;
+        _cache = cache;
     }
 
     public async Task<IEnumerable<WeatherForecast>> GetWeathers()
     {
-        var cache = await _objectCache.GetAsync<IEnumerable<WeatherForecast>>(
+        var cache = await _cache.GetWeathers(
             Key,
             () =>
             {
@@ -33,9 +31,10 @@ internal class WeatherForecastRepository : IWeatherForecasts
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = Random.Shared.Next(-20, 55),
                     Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-                });
+                })
+                .ToList();
 
-                return Task.FromResult(retorno);
+                return Task.FromResult(retorno.AsEnumerable());
             });
 
         return cache;
