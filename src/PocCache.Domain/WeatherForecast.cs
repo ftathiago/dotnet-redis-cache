@@ -1,4 +1,4 @@
-namespace PocCache.Api;
+namespace PocCache.Domain;
 
 public class WeatherForecast
 {
