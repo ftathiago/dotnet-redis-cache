@@ -8,14 +8,12 @@ public class CityRepository : ICities
     private const string Key = "e0a4ef9d-8cde-46e6-93a2-3c27ba3e88fc";
     private readonly ICitiesCache _citiesCache;
 
-    public CityRepository(ICitiesCache citiesCache)
-    {
+    public CityRepository(ICitiesCache citiesCache) =>
         _citiesCache = citiesCache;
-    }
 
-    public Task<IEnumerable<City>> GetCitiesAsync()
+    public async Task<IEnumerable<City>> GetCitiesAsync()
     {
-        return _citiesCache.GetCities(Key, () =>
+        var cities = await _citiesCache.GetCities(Key, () =>
             {
                 var lista = new List<City>()
                 {
@@ -26,7 +24,9 @@ public class CityRepository : ICities
                     new City() { Name = "São Paulo" },
                 };
 
-                return Task.FromResult(lista.AsEnumerable());
-            });
+                return Task.FromResult<IEnumerable<City>?>(lista.AsEnumerable());
+            }) ?? Enumerable.Empty<City>();
+
+        return cities;
     }
 }

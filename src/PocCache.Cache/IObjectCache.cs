@@ -1,8 +1,10 @@
 namespace PocCache.Cache;
 
-public interface IObjectCache
+public interface IObjectCache<TObject>
 {
-    Task<TObject> GetAsync<TObject>(string key, Func<Task<TObject>> getData);
+    Task<TObject?> GetAsync(string key, Func<Task<TObject?>> getData);
+
+    Task RemoveAsync(string key);
 
     void SetCacheOptions(CacheConfiguration cacheConfiguration);
 }

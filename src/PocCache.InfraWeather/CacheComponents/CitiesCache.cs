@@ -3,21 +3,21 @@ using PocCache.Domain;
 
 namespace PocCache.InfraWeather.CacheComponents;
 
-internal class CitiesCache : ICitiesCache
+internal class CitiesCache :
+    BaseCacheComponent<IEnumerable<City>, CitiesCacheConfig>,
+    ICitiesCache
 {
-    private readonly IObjectCache _objectCache;
-
     public CitiesCache(
-        IObjectCache objectCache,
+        IObjectCache<IEnumerable<City>> objectCache,
         CitiesCacheConfig citiesCacheConfig)
+        : base(objectCache, citiesCacheConfig)
     {
-        _objectCache = objectCache;
-        _objectCache.SetCacheOptions(citiesCacheConfig);
     }
-    public Task<IEnumerable<City>> GetCities(
+
+    public Task<IEnumerable<City>?> GetCities(
         string key,
-        Func<Task<IEnumerable<City>>> getFromOrigin)
+        Func<Task<IEnumerable<City>?>> getFromOrigin)
     {
-        return _objectCache.GetAsync(key, getFromOrigin);
+        return ObjectCache.GetAsync(key, getFromOrigin);
     }
 }

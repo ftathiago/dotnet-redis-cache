@@ -4,7 +4,7 @@ namespace PocCache.InfraWeather.CacheComponents;
 
 public interface ICitiesCache
 {
-    public Task<IEnumerable<City>> GetCities(
+    public Task<IEnumerable<City>?> GetCities(
         string key,
-        Func<Task<IEnumerable<City>>> getFromOrigin);
+        Func<Task<IEnumerable<City>?>> getFromOrigin);
 }

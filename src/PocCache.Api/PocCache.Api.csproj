@@ -8,13 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.16" />
-    <PackageReference Include="StackExchange.Redis" Version="2.6.104" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PocCache.InfraWeather\PocCache.InfraWeather.csproj" />
     <ProjectReference Include="..\PocCache.Domain\PocCache.Domain.csproj" />
+    <ProjectReference Include="..\PocCache.Cache\PocCache.Cache.csproj" />
   </ItemGroup>
 
 </Project>

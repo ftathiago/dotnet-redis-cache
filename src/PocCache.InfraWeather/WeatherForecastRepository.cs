@@ -14,17 +14,12 @@ internal class WeatherForecastRepository : IWeatherForecasts
 
     private readonly IWeatherForecastCache _cache;
 
-    public WeatherForecastRepository(
-        IWeatherForecastCache cache)
-    {
+    public WeatherForecastRepository(IWeatherForecastCache cache) =>
         _cache = cache;
-    }
 
     public async Task<IEnumerable<WeatherForecast>> GetWeathers()
     {
-        var cache = await _cache.GetWeathers(
-            Key,
-            () =>
+        var cache = await _cache.GetWeathers(Key, () =>
             {
                 var retorno = Enumerable.Range(1, 5).Select(index => new WeatherForecast
                 {
@@ -34,8 +29,8 @@ internal class WeatherForecastRepository : IWeatherForecasts
                 })
                 .ToList();
 
-                return Task.FromResult(retorno.AsEnumerable());
-            });
+                return Task.FromResult<IEnumerable<WeatherForecast>?>(retorno.AsEnumerable());
+            }) ?? Array.Empty<WeatherForecast>();
 
         return cache;
     }

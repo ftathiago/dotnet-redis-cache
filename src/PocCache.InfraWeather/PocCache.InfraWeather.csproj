@@ -1,10 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\PocCache.Domain\PocCache.Domain.csproj" />
-    <ProjectReference Include="..\PocCache.Cache\PocCache.Cache.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -17,4 +11,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PocCache.Domain\PocCache.Domain.csproj" />
+    <ProjectReference Include="..\PocCache.Cache\PocCache.Cache.csproj" />
+  </ItemGroup>
+
 </Project>
