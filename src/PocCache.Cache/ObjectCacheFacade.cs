@@ -8,17 +8,19 @@ internal class ObjectCacheFacade<TObject> : IObjectCache<TObject>
 {
     private readonly ILogger<TObject> _logger;
     private readonly IDistributedCache _distributedCache;
-
+    private readonly RedisCacheMonitor _redisCacheMonitor;
     private ICacheAccessor<TObject> _cacheAccessor;
-    private CacheConfiguration _cacheConfiguration = new();
+    private CacheEntryConfiguration _cacheConfiguration = new();
 
     public ObjectCacheFacade(
         ILogger<TObject> logger,
-        IDistributedCache distributedCache)
+        IDistributedCache distributedCache,
+        RedisCacheMonitor redisCacheMonitor)
     {
         _logger = logger;
         _cacheAccessor = new NoCacheAccessor<TObject>(logger);
         _distributedCache = distributedCache;
+        _redisCacheMonitor = redisCacheMonitor;
     }
 
     public async Task<TObject?> GetAsync(string key, Func<Task<TObject?>> getFromOrigin)
@@ -41,12 +43,14 @@ internal class ObjectCacheFacade<TObject> : IObjectCache<TObject>
         await _cacheAccessor.RemoveAsync(cacheKey);
     }
 
-    public void SetCacheOptions(CacheConfiguration cacheConfiguration)
+    public void SetCacheOptions(CacheEntryConfiguration cacheConfiguration)
     {
         _cacheConfiguration = cacheConfiguration;
-        if (cacheConfiguration.Active)
+
+        if (cacheConfiguration.Active && _redisCacheMonitor.Active)
         {
             _cacheAccessor = new CacheAccessor<TObject>(
+                _logger,
                 cacheConfiguration,
                 _distributedCache);
             return;
@@ -55,6 +59,6 @@ internal class ObjectCacheFacade<TObject> : IObjectCache<TObject>
         _cacheAccessor = new NoCacheAccessor<TObject>(_logger);
     }
 
-    private CacheKey BuildCacheKey(string baseKey) =>
+    private CacheKey<TObject> BuildCacheKey(string baseKey) =>
         new(_cacheConfiguration, baseKey);
 }

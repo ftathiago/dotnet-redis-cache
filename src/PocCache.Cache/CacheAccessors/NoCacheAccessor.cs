@@ -5,7 +5,7 @@ namespace PocCache.Cache.CacheAccessors;
 internal class NoCacheAccessor<TObject> : ICacheAccessor<TObject>
 {
     private const string WillNotSet =
-        "The cache key {keyValue} will not be store at cache, because caching is disabled.";
+        "The cache key {keyValue} will not be store on cache, because caching is disabled.";
 
     private const string WillNotGet =
         "The cache key {keyValue} will not retrieved from cache, because caching is disabled.";
@@ -21,19 +21,19 @@ internal class NoCacheAccessor<TObject> : ICacheAccessor<TObject>
         _logger = logger;
     }
 
-    public Task SetAsync(CacheKey key, TObject? instance)
+    public Task SetAsync(CacheKey<TObject> key, TObject? instance)
     {
         _logger.LogDebug(WillNotSet, key.Value);
         return Task.CompletedTask;
     }
 
-    public Task<TObject?> GetAsync(CacheKey key)
+    public Task<TObject?> GetAsync(CacheKey<TObject> key)
     {
         _logger.LogDebug(WillNotGet, key.Value);
         return Task.FromResult<TObject?>(default);
     }
 
-    public Task RemoveAsync(CacheKey key)
+    public Task RemoveAsync(CacheKey<TObject> key)
     {
         _logger.LogDebug(WillNotRemove, key.Value);
         return Task.CompletedTask;

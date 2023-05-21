@@ -13,7 +13,7 @@ public class CityRepository : ICities
 
     public async Task<IEnumerable<City>> GetCitiesAsync()
     {
-        var cities = await _citiesCache.GetCities(Key, () =>
+        var cities = await _citiesCache.GetCities(Key, async () =>
             {
                 var lista = new List<City>()
                 {
@@ -24,7 +24,9 @@ public class CityRepository : ICities
                     new City() { Name = "São Paulo" },
                 };
 
-                return Task.FromResult<IEnumerable<City>?>(lista.AsEnumerable());
+                await Task.Delay(TimeSpan.FromSeconds(2));
+
+                return lista.AsEnumerable();
             }) ?? Enumerable.Empty<City>();
 
         return cities;

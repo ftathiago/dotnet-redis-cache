@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.104" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,3 @@
-using PocCache.Cache.Extensions;
 using PocCache.InfraWeather.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +8,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services
-    .AddDistributedCache()
-    .AddInfraWeather();
 
+builder.Services
+    .AddInfraWeather();
 
 var app = builder.Build();
 
@@ -23,7 +21,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 

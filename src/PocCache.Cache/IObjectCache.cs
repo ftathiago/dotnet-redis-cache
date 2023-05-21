@@ -6,5 +6,5 @@ public interface IObjectCache<TObject>
 
     Task RemoveAsync(string key);
 
-    void SetCacheOptions(CacheConfiguration cacheConfiguration);
+    void SetCacheOptions(CacheEntryConfiguration cacheConfiguration);
 }

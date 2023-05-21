@@ -1,7 +1,7 @@
 namespace PocCache.Cache;
 
 public abstract class BaseCacheComponent<TCachedObject, TCacheConfig>
-    where TCacheConfig : CacheConfiguration
+    where TCacheConfig : CacheEntryConfiguration
 {
     protected BaseCacheComponent(
         IObjectCache<TCachedObject> objectCache,

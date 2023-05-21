@@ -8,21 +8,26 @@ namespace PocCache.InfraWeather.Extensions;
 
 public static class InfraWeatherServicesExtension
 {
-    public static IServiceCollection AddInfraWeather(this IServiceCollection services) =>
-        services
-            .AddObjectCache()
+    public static IServiceCollection AddInfraWeather(this IServiceCollection services)
+    {
+        using var provider = services.BuildServiceProvider();
+        return services
             .AddScoped<IWeatherForecasts, WeatherForecastRepository>()
             .AddScoped<ICities, CityRepository>()
             .AddTransient<IWeatherForecastCache, WeatherForecastCache>()
             .AddTransient<ICitiesCache, CitiesCache>()
-            .AddSingleton(provider =>
-            {
-                return provider.GetRequiredService<IConfiguration>()
-                    .GetSection(nameof(WeatherCacheConfig)).Get<WeatherCacheConfig>();
-            })
-            .AddSingleton(provider =>
-            {
-                return provider.GetRequiredService<IConfiguration>()
-                    .GetSection(nameof(CitiesCacheConfig)).Get<CitiesCacheConfig>();
-            });
+            .AddSingleton(provider => provider
+                .GetRequiredService<IConfiguration>()
+                .GetSection(nameof(WeatherCacheConfig))
+                .Get<WeatherCacheConfig>())
+            .AddSingleton(provider => provider
+                .GetRequiredService<IConfiguration>()
+                .GetSection(nameof(CitiesCacheConfig))
+                .Get<CitiesCacheConfig>())
+            .AddObjectCache()
+            .AddDistributedCache(config =>
+                provider.GetRequiredService<IConfiguration>()
+                    .GetSection("CacheConfig")
+                    .Bind(config));
+    }
 }
