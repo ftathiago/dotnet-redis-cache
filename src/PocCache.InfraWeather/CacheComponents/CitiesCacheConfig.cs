@@ -2,6 +2,6 @@ using PocCache.Cache;
 
 namespace PocCache.InfraWeather.CacheComponents;
 
-public record CitiesCacheConfig : CacheEntryConfiguration
+public class CitiesCacheConfig : CacheEntryConfiguration
 {
 }

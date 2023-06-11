@@ -7,9 +7,9 @@ internal class WeatherForecastRepository : IWeatherForecasts
 {
     private const string Key = "09578ca0-949c-4e1b-98a2-2eb31a2c0592";
 
-    private static readonly string[] Summaries = new[]
+    private static readonly string[] _summaries = new[]
     {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching",
     };
 
     private readonly IWeatherForecastCache _cache;
@@ -25,7 +25,7 @@ internal class WeatherForecastRepository : IWeatherForecasts
                 {
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                    Summary = _summaries[Random.Shared.Next(_summaries.Length)],
                 })
                 .ToList();
 

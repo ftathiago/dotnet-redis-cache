@@ -1,10 +1,12 @@
 namespace PocCache.Cache;
 
-internal class RedisCacheMonitor
+internal class CacheMonitor
 {
+    private readonly object _lock = new();
+
     private volatile bool _active = true;
 
-    private readonly object _lock = new();
+    public bool Active => _active;
 
     public void UpdateCache(bool active)
     {
@@ -13,6 +15,4 @@ internal class RedisCacheMonitor
             _active = active;
         }
     }
-
-    public bool Active => _active;
 }

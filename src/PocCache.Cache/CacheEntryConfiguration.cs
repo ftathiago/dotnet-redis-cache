@@ -1,9 +1,7 @@
 namespace PocCache.Cache;
 
-public record CacheEntryConfiguration
+public class CacheEntryConfiguration
 {
-    public string TypeFor => GetType().Name;
-
     public bool Active { get; set; } = true;
 
     public int CacheDurationInMinutes { get; set; } = 5;

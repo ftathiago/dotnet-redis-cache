@@ -24,7 +24,6 @@ public static class InfraWeatherServicesExtension
                 .GetRequiredService<IConfiguration>()
                 .GetSection(nameof(CitiesCacheConfig))
                 .Get<CitiesCacheConfig>())
-            .AddObjectCache()
             .AddDistributedCache(config =>
                 provider.GetRequiredService<IConfiguration>()
                     .GetSection("CacheConfig")

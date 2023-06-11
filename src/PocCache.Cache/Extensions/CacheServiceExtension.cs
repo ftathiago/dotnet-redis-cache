@@ -4,10 +4,6 @@ namespace PocCache.Cache.Extensions;
 
 public static class CacheServiceExtension
 {
-    public static IServiceCollection AddObjectCache(this IServiceCollection services) =>
-        services
-            .AddTransient(typeof(IObjectCache<>), typeof(ObjectCacheFacade<>));
-
     public static IServiceCollection AddDistributedCache(
         this IServiceCollection services,
         Action<CacheConfig> setupCache)
@@ -16,11 +12,20 @@ public static class CacheServiceExtension
 
         setupCache(config);
 
+        services
+            .AddObjectCache();
+
         if (config.CacheType == CacheType.InMemory)
         {
-            return services.AddDistributedMemoryCache();
+            return services
+                .ConfigureInMemory();
         }
 
-        return services.ConfigureRedis(config);
+        return services
+            .ConfigureRedis(config);
     }
+
+    private static IServiceCollection AddObjectCache(this IServiceCollection services) =>
+        services
+            .AddTransient(typeof(IObjectCache<>), typeof(ObjectCacheFacade<>));
 }

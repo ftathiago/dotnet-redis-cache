@@ -5,7 +5,6 @@ namespace PocCache.Cache.Extensions;
 
 internal static class RedisConfigExtension
 {
-
     public static IServiceCollection ConfigureRedis(
         this IServiceCollection services,
         CacheConfig config)
@@ -15,29 +14,25 @@ internal static class RedisConfigExtension
             ignoreUnknown: false);
         redisConfig.AbortOnConnectFail = false;
 
-        var redisCacheMonitor = new RedisCacheMonitor();
-        var multiplexer = BuildMultiplexer(redisCacheMonitor, redisConfig);
+        var cacheMonitor = new CacheMonitor();
+        var multiplexer = BuildMultiplexer(cacheMonitor, redisConfig);
 
         return services
-            .AddSingleton(redisCacheMonitor)
+            .AddSingleton(cacheMonitor)
             .AddSingleton(multiplexer)
             .AddStackExchangeRedisCache(options =>
                 options.ConfigurationOptions = redisConfig);
     }
 
     private static IConnectionMultiplexer BuildMultiplexer(
-        RedisCacheMonitor redisCacheMonitor,
+        CacheMonitor redisCacheMonitor,
         ConfigurationOptions redisConfig)
     {
         var multiplexer = ConnectionMultiplexer.Connect(redisConfig) as IConnectionMultiplexer;
         multiplexer.ConnectionRestored += (sender, args) =>
-        {
             redisCacheMonitor.UpdateCache(true);
-        };
         multiplexer.ConnectionFailed += (sender, args) =>
-        {
             redisCacheMonitor.UpdateCache(false);
-        };
 
         return multiplexer;
     }

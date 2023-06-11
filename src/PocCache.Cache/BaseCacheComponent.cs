@@ -13,5 +13,6 @@ public abstract class BaseCacheComponent<TCachedObject, TCacheConfig>
     }
 
     protected IObjectCache<TCachedObject> ObjectCache { get; }
+
     protected TCacheConfig CacheConfig { get; }
 }

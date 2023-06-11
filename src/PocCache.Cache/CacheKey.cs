@@ -25,23 +25,34 @@ internal readonly struct CacheKey<TObject>
 
         sb
             .Append(type.Namespace)
-            .Append('.')
-            .Append(type.Name);
+            .Append('.');
 
         if (type.IsGenericType)
         {
-            sb
-                .Remove(sb.Length - 2, 2)
-                .Append('<');
-            foreach (var arg in type.GenericTypeArguments)
-            {
-                GetTypeName(arg, sb)
-                    .Append(", ");
-            }
-            sb
-                .Remove(sb.Length - 2, 2)
-                .Append('>');
+            return FormatGenericTypes(sb, type);
         }
+
+        return sb.Append(type.Name);
+    }
+
+    // When is a generic type, the `type.Name` returns something like
+    // "IEnumerable`1". The code bellow remove, turning a more friendly text.
+    private StringBuilder FormatGenericTypes(StringBuilder sb, Type type)
+    {
+        var name = type.Name[..type.Name.LastIndexOf('`')];
+
+        sb
+            .Append(name)
+            .Append('<');
+        foreach (var arg in type.GenericTypeArguments)
+        {
+            GetTypeName(arg, sb)
+                .Append(", ");
+        }
+
+        sb
+            .Remove(sb.Length - 2, 2)
+            .Append('>');
 
         return sb;
     }

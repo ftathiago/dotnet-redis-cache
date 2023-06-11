@@ -9,10 +9,13 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
 {
     private const string ErrorUpdating =
         "Error while updating cache. This could make requests slowly.";
+
     private const string ErrorGetting =
         "Error while retrieving data from cache. This could make requests slowly.";
+
     private const string ErrorRemoving =
         "Error while removing data from cache. This could make requests slowly.";
+
     private readonly ILogger<TObject> _logger;
     private readonly CacheEntryConfiguration _cacheConfiguration;
     private readonly IDistributedCache _cache;
@@ -46,7 +49,7 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
         }
         catch (RedisConnectionException ex)
         {
-            _logger.LogError(eventId: new EventId(), ex, ErrorUpdating);
+            _logger.LogError(eventId: default, ex, ErrorUpdating);
         }
     }
 
@@ -65,7 +68,7 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
         catch (RedisConnectionException ex)
         {
             _logger.LogError(
-                eventId: new EventId(),
+                eventId: default,
                 ex,
                 ErrorGetting);
 
@@ -82,7 +85,7 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
         catch (RedisConnectionException ex)
         {
             _logger.LogError(
-                eventId: new EventId(),
+                eventId: default,
                 ex,
                 ErrorRemoving);
         }

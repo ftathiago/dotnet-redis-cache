@@ -1,4 +1,3 @@
-
 namespace PocCache.Cache.CacheAccessors;
 
 internal interface ICacheAccessor<TObject>
