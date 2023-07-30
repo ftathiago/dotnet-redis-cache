@@ -1,0 +1,4 @@
+{
+  "dotnet.defaultSolution": "PocCache.sln",
+  "sarif-viewer.connectToGithubCodeScanning": "off"
+}

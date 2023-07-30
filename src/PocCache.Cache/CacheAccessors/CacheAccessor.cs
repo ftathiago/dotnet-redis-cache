@@ -44,8 +44,10 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
                 key.Value,
                 serialized,
                 new DistributedCacheEntryOptions()
-                    .SetAbsoluteExpiration(_cacheConfiguration.CacheDuration)
-                    .SetSlidingExpiration(_cacheConfiguration.CacheSlidingDuration));
+                {
+                    AbsoluteExpiration = DateTimeOffset.UtcNow.Add(_cacheConfiguration.CacheDuration),
+                    SlidingExpiration = _cacheConfiguration.CacheSlidingDuration,
+                });
         }
         catch (RedisConnectionException ex)
         {
@@ -58,7 +60,7 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
         try
         {
             var cacheValue = await _cache.GetStringAsync(key.Value);
-            if (cacheValue is null)
+            if (string.IsNullOrEmpty(cacheValue))
             {
                 return default;
             }
