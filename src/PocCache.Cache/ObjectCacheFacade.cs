@@ -52,7 +52,8 @@ internal class ObjectCacheFacade<TObject> : IObjectCache<TObject>
             _cacheAccessor = new CacheAccessor<TObject>(
                 _logger,
                 cacheConfiguration,
-                _distributedCache);
+                _distributedCache,
+                _redisCacheMonitor);
             return;
         }
 

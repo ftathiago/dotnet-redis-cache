@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -12,12 +13,15 @@ internal static class RedisConfigExtension
         Action<RedisCacheOptions> setupAction)
     {
         var cacheMonitor = new CacheMonitor();
-        var provider = services.BuildServiceProvider();
+
         return services
             .AddSingleton(cacheMonitor)
             .Configure(setupAction)
-            .AddSingleton(p => Connection(p.GetRequiredService<IOptions<RedisCacheOptions>>().Value))
-            .AddStackExchangeRedisCache(ReuseConnection(provider, setupAction));
+            .AddSingleton(p => Connection(p.GetRequiredService<IOptions<RedisCacheOptions>>().Value, cacheMonitor))
+            .AddSingleton(provider => new ServiceCollection()
+                .AddStackExchangeRedisCache(ReuseConnection(provider, setupAction))
+                .BuildServiceProvider()
+                .GetRequiredService<IDistributedCache>());
     }
 
     /// <summary>
@@ -26,7 +30,7 @@ internal static class RedisConfigExtension
     /// <param name="options">Cache options</param>
     /// <returns>Connection multiplexer</returns>
     /// <exception cref="ArgumentNullException">Throws if no connection options available</exception>
-    private static IConnectionMultiplexer Connection(RedisCacheOptions options)
+    private static IConnectionMultiplexer Connection(RedisCacheOptions options, CacheMonitor cacheMonitor)
     {
         IConnectionMultiplexer? connection = null;
         if (options.ConnectionMultiplexerFactory != null)
@@ -47,8 +51,8 @@ internal static class RedisConfigExtension
             throw new ArgumentNullException(nameof(options), "All connection options are null");
         }
 
-        connection.ConnectionFailed += (sender, args) => Console.WriteLine("Conexão Falhou");
-        connection.ConnectionRestored += (sender, args) => Console.WriteLine("Conexão Voltou");
+        connection.ConnectionFailed += (sender, args) => cacheMonitor.UpdateCache(false);
+        connection.ConnectionRestored += (sender, args) => cacheMonitor.UpdateCache(true);
 
         return connection;
     }
@@ -56,13 +60,13 @@ internal static class RedisConfigExtension
     /// <summary>
     /// The trick to reuse existing connection in our and RedisCache implementations
     /// </summary>
-    /// <param name="serviceProvider">Provider</param>
+    /// <param name="provider">Provider</param>
     /// <param name="setupAction">Setup Action</param>
-    private static Action<RedisCacheOptions> ReuseConnection(IServiceProvider serviceProvider, Action<RedisCacheOptions> setupAction) => options =>
+    private static Action<RedisCacheOptions> ReuseConnection(IServiceProvider provider, Action<RedisCacheOptions> setupAction) => options =>
     {
         setupAction(options);
         options.Configuration = null;
         options.ConfigurationOptions = null;
-        options.ConnectionMultiplexerFactory = () => Task.FromResult(serviceProvider.GetRequiredService<IConnectionMultiplexer>());
+        options.ConnectionMultiplexerFactory = () => Task.FromResult(provider.GetRequiredService<IConnectionMultiplexer>());
     };
 }

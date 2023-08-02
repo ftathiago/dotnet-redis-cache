@@ -25,7 +25,8 @@ public abstract class CacheAccessorBaseTest<TObject> : IDisposable
         new CacheAccessor<TObject>(
             Logger.Object,
             CacheEntryConfiguration,
-            DistributedCache.Object);
+            DistributedCache.Object,
+            new CacheMonitor());
 
     internal CacheKey<TObject> BuildCacheKey() => new(
         CacheEntryConfiguration,

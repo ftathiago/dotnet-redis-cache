@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
-using Xunit.Abstractions;
 
 namespace PocCache.Cache.Tests.CacheAccessorsTest;
 

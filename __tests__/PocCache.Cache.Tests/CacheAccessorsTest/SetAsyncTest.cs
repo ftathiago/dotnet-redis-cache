@@ -2,7 +2,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System.Text;
 using System.Text.Json;
-using Xunit.Abstractions;
 
 namespace PocCache.Cache.Tests.CacheAccessorsTest;
 

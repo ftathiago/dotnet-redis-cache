@@ -19,15 +19,18 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
     private readonly ILogger<TObject> _logger;
     private readonly CacheEntryConfiguration _cacheConfiguration;
     private readonly IDistributedCache _cache;
+    private readonly CacheMonitor _cacheMonitor;
 
     public CacheAccessor(
         ILogger<TObject> logger,
         CacheEntryConfiguration cacheConfiguration,
-        IDistributedCache cache)
+        IDistributedCache cache,
+        CacheMonitor cacheMonitor)
     {
         _logger = logger;
         _cacheConfiguration = cacheConfiguration;
         _cache = cache;
+        _cacheMonitor = cacheMonitor;
     }
 
     public async Task SetAsync(CacheKey<TObject> key, TObject? instance)
@@ -51,6 +54,7 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
         }
         catch (RedisConnectionException ex)
         {
+            _cacheMonitor.UpdateCache(false);
             _logger.LogError(eventId: default, ex, ErrorUpdating);
         }
     }
@@ -69,6 +73,7 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
         }
         catch (RedisConnectionException ex)
         {
+            _cacheMonitor.UpdateCache(false);
             _logger.LogError(
                 eventId: default,
                 ex,
@@ -86,6 +91,7 @@ internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
         }
         catch (RedisConnectionException ex)
         {
+            _cacheMonitor.UpdateCache(false);
             _logger.LogError(
                 eventId: default,
                 ex,
