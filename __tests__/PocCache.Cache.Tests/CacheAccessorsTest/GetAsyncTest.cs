@@ -7,10 +7,6 @@ namespace PocCache.Cache.Tests.CacheAccessorsTest;
 
 public class GetAsyncTest : CacheAccessorBaseTest<Guid>
 {
-    public GetAsyncTest(ITestOutputHelper output) : base(output)
-    {
-    }
-
     [Fact]
     public async Task Should_AnObject_When_EntryIsLocatedAsync()
     {

@@ -2,19 +2,11 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using PocCache.Cache.CacheAccessors;
 using StackExchange.Redis;
-using Xunit.Abstractions;
 
 namespace PocCache.Cache.Tests.CacheAccessorsTest;
 
 public abstract class CacheAccessorBaseTest<TObject> : IDisposable
 {
-    protected readonly ITestOutputHelper _output;
-
-    public CacheAccessorBaseTest(ITestOutputHelper output)
-    {
-        _output = output;
-    }
-
     protected Mock<ILogger<TObject>> Logger { get; } = new(MockBehavior.Loose);
 
     protected CacheEntryConfiguration CacheEntryConfiguration { get; } =

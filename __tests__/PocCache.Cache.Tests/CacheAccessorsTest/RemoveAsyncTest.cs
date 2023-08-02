@@ -5,10 +5,6 @@ namespace PocCache.Cache.Tests.CacheAccessorsTest;
 
 public class RemoveAsyncTest : CacheAccessorBaseTest<Guid?>
 {
-    public RemoveAsyncTest(ITestOutputHelper output) : base(output)
-    {
-    }
-
     [Fact]
     public async Task Should_CallRemoveMethodFromCacheAsync()
     {

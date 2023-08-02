@@ -8,10 +8,6 @@ namespace PocCache.Cache.Tests.CacheAccessorsTest;
 
 public class SetAsyncTest : CacheAccessorBaseTest<Guid?>
 {
-    public SetAsyncTest(ITestOutputHelper output) : base(output)
-    {
-    }
-
     [Fact]
     public void Should_ReturnTaskCompleted_When_InstanceIsNull()
     {
