@@ -22,7 +22,7 @@ public static class CacheServiceExtension
         }
 
         return services
-            .ConfigureRedis(config);
+            .ConfigureRedis(opt => opt.Configuration = config.ConnectionString);
     }
 
     private static IServiceCollection AddObjectCache(this IServiceCollection services) =>
