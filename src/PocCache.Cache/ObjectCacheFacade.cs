@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using PocCache.Cache.Abstractions;
 using PocCache.Cache.CacheAccessors;
+using PocCache.Cache.CacheAccessors.Impl;
 
 namespace PocCache.Cache;
 

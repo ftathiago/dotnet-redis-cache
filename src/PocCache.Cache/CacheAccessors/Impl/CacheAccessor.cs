@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace PocCache.Cache.CacheAccessors;
+namespace PocCache.Cache.CacheAccessors.Impl;
 
 internal class CacheAccessor<TObject> : ICacheAccessor<TObject>
 {

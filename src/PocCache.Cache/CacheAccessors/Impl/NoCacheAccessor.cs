@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace PocCache.Cache.CacheAccessors;
+namespace PocCache.Cache.CacheAccessors.Impl;
 
 internal class NoCacheAccessor<TObject> : ICacheAccessor<TObject>
 {

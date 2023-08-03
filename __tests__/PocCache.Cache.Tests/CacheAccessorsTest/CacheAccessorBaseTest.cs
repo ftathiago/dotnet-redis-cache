@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using PocCache.Cache.CacheAccessors;
+using PocCache.Cache.CacheAccessors.Impl;
 using StackExchange.Redis;
 
 namespace PocCache.Cache.Tests.CacheAccessorsTest;

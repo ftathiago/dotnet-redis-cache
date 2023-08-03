@@ -8,6 +8,14 @@ namespace PocCache.Cache.Extensions;
 
 internal static class RedisConfigExtension
 {
+    /// <summary>
+    /// Extension method to configure Redis as Cache database provider.
+    /// Also, this setup a monitor for Redis status, turning on/off
+    /// the cache functionality based on Redis Status.
+    /// </summary>
+    /// <param name="services">Instance of DependencyInjection container</param>
+    /// <param name="setupAction">Delegate method for RedisCacheOptions configuration.</param>
+    /// <returns>The same services instance.</returns>
     public static IServiceCollection ConfigureRedis(
         this IServiceCollection services,
         Action<RedisCacheOptions> setupAction)
@@ -17,7 +25,14 @@ internal static class RedisConfigExtension
         return services
             .AddSingleton(cacheMonitor)
             .Configure(setupAction)
-            .AddSingleton(p => Connection(p.GetRequiredService<IOptions<RedisCacheOptions>>().Value, cacheMonitor))
+
+            // Turns Connection destructive by IServiceCollection, avoiding memory leak and
+            // connection "keeping open" after application shutdown.
+            .AddSingleton(provider => BuildRedisConnection(provider.GetRequiredService<IOptions<RedisCacheOptions>>().Value, cacheMonitor))
+
+            // This is need in this way, because otherwise, we will have a circular reference
+            // about connection configuration. Can be removed, maybe, if reading original source,
+            // we create this objects tree manually. But, we want to maintain any lib change?
             .AddSingleton(provider => new ServiceCollection()
                 .AddStackExchangeRedisCache(ReuseConnection(provider, setupAction))
                 .BuildServiceProvider()
@@ -25,12 +40,13 @@ internal static class RedisConfigExtension
     }
 
     /// <summary>
-    /// Get connection from given options
+    /// Get connection from given options.
     /// </summary>
-    /// <param name="options">Cache options</param>
+    /// <param name="options">Cache options and configurations.</param>
+    /// <param name="cacheMonitor">Monitoring Redis connection, toggling cache on/off.</param>
     /// <returns>Connection multiplexer</returns>
     /// <exception cref="ArgumentNullException">Throws if no connection options available</exception>
-    private static IConnectionMultiplexer Connection(RedisCacheOptions options, CacheMonitor cacheMonitor)
+    private static IConnectionMultiplexer BuildRedisConnection(RedisCacheOptions options, CacheMonitor cacheMonitor)
     {
         IConnectionMultiplexer? connection = null;
         if (options.ConnectionMultiplexerFactory != null)
@@ -58,10 +74,11 @@ internal static class RedisConfigExtension
     }
 
     /// <summary>
-    /// The trick to reuse existing connection in our and RedisCache implementations
+    /// This method changes RedisCacheOptions to take (and return) connections from DependencyInjection
+    /// container.
     /// </summary>
-    /// <param name="provider">Provider</param>
-    /// <param name="setupAction">Setup Action</param>
+    /// <param name="provider">Service provider to provide a singleton instance of IConnectionMultiplexer</param>
+    /// <param name="setupAction">Action thats setup the RedisCacheOptions.</param>
     private static Action<RedisCacheOptions> ReuseConnection(IServiceProvider provider, Action<RedisCacheOptions> setupAction) => options =>
     {
         setupAction(options);

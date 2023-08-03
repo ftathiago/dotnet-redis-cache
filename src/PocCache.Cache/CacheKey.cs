@@ -2,6 +2,10 @@ using System.Text;
 
 namespace PocCache.Cache;
 
+/// <summary>
+/// Normalize cache key
+/// </summary>
+/// <typeparam name="TObject">The object type that this class refers to.</typeparam>
 internal readonly struct CacheKey<TObject>
 {
     private readonly CacheEntryConfiguration _cacheConfiguration;
@@ -15,6 +19,10 @@ internal readonly struct CacheKey<TObject>
         _key = key;
     }
 
+    /// <summary>
+    /// Formated cache key
+    /// </summary>
+    /// <returns>Returns Cache key as string.</returns>
     public string Value => string.IsNullOrEmpty(_cacheConfiguration.KeyPrefix)
         ? $"{GetTypeName(typeof(TObject))}:{_key}"
         : $"{_cacheConfiguration.KeyPrefix}:{GetTypeName(typeof(TObject))}:{_key}";
@@ -36,7 +44,7 @@ internal readonly struct CacheKey<TObject>
     }
 
     // When is a generic type, the `type.Name` returns something like
-    // "IEnumerable`1". The code bellow remove, turning a more friendly text.
+    // "IEnumerable`1". The code bellow remove, turning into a more friendly text.
     private StringBuilder FormatGenericTypes(StringBuilder sb, Type type)
     {
         var name = type.Name[..type.Name.LastIndexOf('`')];

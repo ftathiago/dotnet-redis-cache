@@ -1,4 +1,4 @@
-namespace PocCache.Cache;
+namespace PocCache.Cache.Abstractions;
 
 public class CacheConfig
 {

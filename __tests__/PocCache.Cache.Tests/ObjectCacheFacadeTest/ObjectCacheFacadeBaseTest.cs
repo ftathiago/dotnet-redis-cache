@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using PocCache.Cache.Abstractions;
 
 namespace PocCache.Cache.Tests.ObjectCacheFacadeTest;
 

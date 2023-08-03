@@ -1,4 +1,5 @@
 using PocCache.Cache;
+using PocCache.Cache.Abstractions;
 using PocCache.Domain;
 
 namespace PocCache.InfraWeather.CacheComponents;

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using PocCache.Cache.CacheAccessors;
+using PocCache.Cache.CacheAccessors.Impl;
 
 namespace PocCache.Cache.Tests.NoCacheAccessorsTest;
 

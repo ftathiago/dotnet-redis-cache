@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using PocCache.Cache.Abstractions;
 
 namespace PocCache.Cache.Extensions;
 
