@@ -1,7 +1,7 @@
 namespace PocCache.Cache.Abstractions;
 
 /// <summary>
-/// Abstract object recovering from cache.
+/// Manipulate typed objects from cache
 /// </summary>
 /// <typeparam name="TObject">The object/type that must be stored on/recovered from cache.</typeparam>
 public interface IObjectCache<TObject>

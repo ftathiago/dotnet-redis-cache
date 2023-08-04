@@ -28,7 +28,9 @@ internal static class RedisConfigExtension
 
             // Turns Connection destructive by IServiceCollection, avoiding memory leak and
             // connection "keeping open" after application shutdown.
-            .AddSingleton(provider => BuildRedisConnection(provider.GetRequiredService<IOptions<RedisCacheOptions>>().Value, cacheMonitor))
+            .AddSingleton<IConnectionMultiplexer>(provider => BuildRedisConnection(
+                provider.GetRequiredService<IOptions<RedisCacheOptions>>().Value,
+                cacheMonitor))
 
             // This is need in this way, because otherwise, we will have a circular reference
             // about connection configuration. Can be removed, maybe, if reading original source,
